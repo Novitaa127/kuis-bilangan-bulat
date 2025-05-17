@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Kuis Bilangan Bulat SMP</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f6f8;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .quiz-box {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .question {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .options button {
+      display: block;
+      width: 100%;
+      max-width: 400px;
+      margin: 8px auto;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      background: #3498db;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .options button:hover {
+      background: #2980b9;
+    }
+
+    .feedback {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .score {
+      font-size: 22px;
+      color: green;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-box">
+    <h2>Kuis Bilangan Bulat – SMP</h2>
+    <div class="question" id="question">Memuat soal...</div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="score" id="score"></div>
+  </div>
+
+  <!-- Suara -->
+  <audio id="audio-correct" src="https://www.soundjay.com/buttons/sounds/button-4.mp3"></audio>
+  <audio id="audio-wrong" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+
+  <script>
+    const questions = [
+      { q: "Budi berada di posisi 0. Ia melangkah +3, lalu -5. Di mana posisinya sekarang?", options: ["-2", "+2", "+1", "-1"], answer: "-2" },
+      { q: "20 dikurangi 35 adalah?", options: ["-15", "+15", "-5", "-20"], answer: "-15" },
+      { q: "Suhu awal 10°C, turun 18°C. Suhu sekarang adalah?", options: ["-8°C", "8°C", "-18°C", "28°C"], answer: "-8°C" },
+      { q: "Bilangan bulat yang lebih besar dari -7 tetapi lebih kecil dari -2 adalah...", options: ["-1", "-3", "-8", "0"], answer: "-3" },
+      { q: "Hasil dari (-6) + (+9) adalah...", options: ["-15", "3", "15", "-3"], answer: "3" },
+      { q: "Hasil dari (+12) - (-3) adalah...", options: ["9", "15", "-15", "-9"], answer: "15" },
+      { q: "Seekor ikan menyelam 12 meter di bawah permukaan laut, lalu naik 5 meter. Di kedalaman berapa sekarang?", options: ["-7", "7", "-17", "5"], answer: "-7" },
+      { q: "(-4) × (+3) =", options: ["-12", "+12", "-7", "7"], answer: "-12" },
+      { q: "Hasil dari (-5) × (-2) =", options: ["-10", "+10", "0", "3"], answer: "10" },
+      { q: "(-15) ÷ (+3) =", options: ["5", "-5", "-12", "3"], answer: "-5" }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    const questionBox = document.getElementById("question");
+    const optionsBox = document.getElementById("options");
+    const feedbackBox = document.getElementById("feedback");
+    const scoreBox = document.getElementById("score");
+
+    const correctSound = document.getElementById("audio-correct");
+    const wrongSound = document.getElementById("audio-wrong");
+
+    function loadQuestion() {
+      feedbackBox.textContent = "";
+      scoreBox.textContent = "";
+
+      const q = questions[current];
+      questionBox.textContent = `Soal ${current + 1}: ${q.q}`;
+      optionsBox.innerHTML = "";
+
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.onclick = () => checkAnswer(opt, q.answer);
+        optionsBox.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selected, correct) {
+      if (selected === correct) {
+        feedbackBox.textContent = "✅ Jawaban benar!";
+        feedbackBox.style.color = "green";
+        correctSound.play();
+        score++;
+      } else {
+        feedbackBox.textContent = `❌ Salah. Jawaban yang benar: ${correct}`;
+        feedbackBox.style.color = "red";
+        wrongSound.play();
+      }
+
+      setTimeout(() => {
+        current++;
+        if (current < questions.length) {
+          loadQuestion();
+        } else {
+          showScore();
+        }
+      }, 1500);
+    }
+
+    function showScore() {
+      questionBox.textContent = "Kuis selesai!";
+      optionsBox.innerHTML = "";
+      feedbackBox.textContent = "";
+      scoreBox.innerHTML = `Skor akhir Anda: <strong>${score} / ${questions.length}</strong>`;
+    }
+
+    loadQuestion();
+  </script>
+
+</body>
+</html>
